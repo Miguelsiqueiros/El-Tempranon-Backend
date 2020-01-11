@@ -1,13 +1,19 @@
-var express = require('express');
+const express = require('express');
+const router = require('./src/Routes/routes');
+const bodyParser = require('body-parser');
 
-const app = express();
+function Server() {
+  var port = process.env.Port || 8080;
 
-app.get('/', (req, res) => {
-  return res.send('Received a GET HTTP method');
-});
+  const app = express();
 
-app.get('/HealthCheck', (req, res) => {
-  return res.status(200).send('Ok');
-});
+  app.use(bodyParser.json());
 
-app.listen(8080, () => console.log('Listening to port 8080'));
+  app.use('/', router);
+
+  return app.listen(port, () => console.log(`Listening to port: ${port}`));
+}
+
+Server();
+
+module.exports = Server;
