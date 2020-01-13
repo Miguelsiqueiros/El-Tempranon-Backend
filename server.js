@@ -9,7 +9,7 @@ function Server() {
 
   app.use(bodyParser.json());
 
-  app.use('/', router);
+  app.use('/api/v1/', router);
 
   return app.listen(port, () => console.log(`Listening to port: ${port}`));
 }
