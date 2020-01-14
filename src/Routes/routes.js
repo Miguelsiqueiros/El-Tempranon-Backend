@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var healthcheck = require('../API/healthcheck');
+var createUser = require('../API/users/users');
 
-router.get('/', (req, res) => res.status(200).send('Home'));
+router.get('/healthcheck', healthcheck);
 
-router.get('/healthcheck', (req, res) => res.status(200).send('OK'));
+router.post('/users/create', createUser);
 
 module.exports = router;
