@@ -1,8 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const healthcheck = require('../API/healthcheck');
+const createUser = require('../API/users/generate-pin');
 
-router.get('/', (req, res) => res.status(200).send('Home'));
+router.get('/healthcheck', healthcheck);
 
-router.get('/healthcheck', (req, res) => res.status(200).send('OK'));
+router.post('/users/create', createUser);
 
 module.exports = router;

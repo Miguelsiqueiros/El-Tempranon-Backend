@@ -5,14 +5,17 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-pino-logger": "^4.0.0",
+    "logger": "0.0.1",
+    "pino": "^5.16.0"
   },
   "type": "module",
   "devDependencies": {
@@ -23,6 +26,10 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.0.0",
+    "mongodb-memory-server": "^6.2.1",
+    "mongoose": "^5.8.7",
+    "mongose": "0.0.2-security",
+    "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }
 }
