@@ -8,7 +8,7 @@ const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const expressLogger = expressPino({ logger });
 
 function Server() {
-  var port = process.env.Port || 8080;
+  const port = process.env.Port || 8080;
 
   const app = express();
 

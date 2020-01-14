@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var healthcheck = require('../API/healthcheck');
-var createUser = require('../API/users/generate-pin');
+const express = require('express');
+const router = express.Router();
+const healthcheck = require('../API/healthcheck');
+const createUser = require('../API/users/generate-pin');
 
 router.get('/healthcheck', healthcheck);
 
