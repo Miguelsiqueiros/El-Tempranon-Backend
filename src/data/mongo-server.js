@@ -1,21 +1,20 @@
 const MongoClient = require('mongodb').MongoClient;
-const loggger = require('../log/logger');
+const url = process.env.MongoClient || 'mongodb://localhost:27017/Tempranon';
 
-module.exports = async function() {
-  const url =
-    process.env.MONGO_CONNECTION_STRING ||
-    'mongodb://localhost:27017/Tempranon';
+const logger = require('../log/logger');
 
-  const dbName = 'Tempranon';
-  const client = new MongoClient(url, { useNewUrlParser: true });
-
+async function Client() {
   try {
+    const client = new MongoClient(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     await client.connect();
-
-    return client.db(dbName);
+    logger.info('succesfuly conected');
+    return client;
   } catch (err) {
-    loggger.error(err.stack);
+    logger.warn(err.stack);
   }
+}
 
-  client.close();
-};
+module.exports = Client();
