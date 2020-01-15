@@ -1,0 +1,32 @@
+// Users
+[{
+    "_id": "5e1e1c851c9d440000d79b77",
+    "pin": 1111,
+    "name": "Pedro Esparza",
+    "image": "https://www.architecturalmailboxes.com/wp-content/uploads/2018/06/admin.png.jpeg",
+    "achievements": {}
+}]
+
+
+// Checkin
+[{
+    "_id": "5e1cca331c9d440000484a85",
+    "pin": 1111,
+    "date": "1/15/2020 1:51:23 PM",
+    "minutes": 0,
+    "pto": false,
+    "week": 1
+}]
+
+// achievements
+[{
+        "_id": "5e1cc9c01c9d440000484a81",
+        "id": 1,
+        "name": "First Place"
+    },
+    {
+        "_id": "5e1cc9c01c9d440000484a82",
+        "id": 2,
+        "name": "Second Place"
+    }
+]
