@@ -2,14 +2,36 @@ const mongoClient = require('../../data/mongo-server');
 const logger = require('../../log/logger');
 
 module.exports = function(req, res) {
-  let randomPin = Math.round(Math.random() * 9999);
+  mongoClient.then(client => {
+    const collection = client.db('Tempranon').collection('users');
 
-  // let userPins = [];
+    collection.find({}).toArray((error, items) => {
+      if (error) {
+        logger.warn(error);
+      } else {
+        let pins = [];
 
-  // const userPinsQuery = mongoClient.find({}, { _id: 0 }, function(error, db) {
-  //   if (error) {
-  //   }
-  // });
+        items.map(item => {
+          pins.push(item.pin);
+        });
 
-  res.status(201).send(`${randomPin}`);
+        let newPin = { pin: SelectRandomNumber(pins) };
+
+        try {
+          collection.insertOne({ pin: newPin });
+        } catch (exceptionError) {
+          logger.warn(exceptionError);
+        }
+        res.status(201).send(JSON.stringify(newPin));
+      }
+    });
+  });
 };
+
+function SelectRandomNumber(currentPins) {
+  while (true) {
+    let randomPin = Math.round(Math.random() * 9999);
+
+    if (!currentPins.includes(randomPin)) return randomPin;
+  }
+}

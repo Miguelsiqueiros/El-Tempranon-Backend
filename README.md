@@ -1,10 +1,10 @@
 # Run app
 
-Install dependencies:
+Install dependencies:\
 **npm install**
 
-Run server:
+Run server:\
 **npm start**
 
-Run unit tests with mocha:
+Run unit tests with mocha:\
 **npm test**
