@@ -2,30 +2,40 @@ const mongoClient = require('../../data/mongo-server');
 const logger = require('../../log/logger');
 
 module.exports = function(req, res) {
-  mongoClient.then(client => {
-    const collection = client.db('Tempranon').collection('users');
+  const { name, imageUrl } = req.body;
 
-    collection.find({}).toArray((error, items) => {
-      if (error) {
-        logger.warn(error);
-      } else {
-        let pins = [];
+  if (!name) {
+    res.status(400).send('Name is required');
+  } else {
+    mongoClient.then(client => {
+      const collection = client.db('Tempranon').collection('users');
 
-        items.map(item => {
-          pins.push(item.pin);
-        });
+      collection.find({}).toArray((error, items) => {
+        if (error) {
+          logger.warn(error);
+        } else {
+          let pins = [];
 
-        let newPin = { pin: SelectRandomNumber(pins) };
+          items.map(item => {
+            pins.push(item.pin);
+          });
 
-        try {
-          collection.insertOne({ pin: newPin });
-        } catch (exceptionError) {
-          logger.warn(exceptionError);
+          let newPin = { pin: SelectRandomNumber(pins) };
+
+          try {
+            collection.insertOne({
+              pin: newPin,
+              name: name,
+              imageUrl: imageUrl
+            });
+          } catch (exceptionError) {
+            logger.warn(exceptionError);
+          }
+          res.status(201).send(JSON.stringify(newPin));
         }
-        res.status(201).send(JSON.stringify(newPin));
-      }
+      });
     });
-  });
+  }
 };
 
 function SelectRandomNumber(currentPins) {
