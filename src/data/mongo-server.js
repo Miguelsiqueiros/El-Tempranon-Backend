@@ -1,20 +1,21 @@
-const MongoClient = require('mongodb').MongoClient;
-const url = process.env.MongoClient || 'mongodb://localhost:27017/Tempranon';
+const mongoClient = require("mongoose");
+const url = process.env.MongoClient || "mongodb://localhost:27017/Tempranon";
 
-const logger = require('../log/logger');
+const logger = require("../log/logger");
 
-async function Client() {
+function Connect() {
   try {
-    const client = new MongoClient(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    await client.connect();
-    logger.info('succesfuly conected');
-    return client;
+    mongoClient.connect(
+      url,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      },
+      () => logger.info("MongoDb successfuly connected")
+    );
   } catch (err) {
     logger.warn(err.stack);
   }
 }
 
-module.exports = Client();
+module.exports = Connect();
