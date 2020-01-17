@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-let userSchema = new Schema({
-  pin: number
+const userSchema = new Schema({
+  pin: Number,
+  name: String,
+  imageUrl: String
 });
 
-module.exports = userSchema;
+module.exports = mongoose.model("users", userSchema);
