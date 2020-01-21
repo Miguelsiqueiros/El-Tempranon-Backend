@@ -1,19 +1,18 @@
-const logger = require("../../log/logger");
-const checkin = require("../../data/schema//checkin-schema");
-const users = require("../../data/schema/user-schema");
-const moment = require("moment");
+const logger = require('../../log/logger');
+const checkin = require('../../data/schema//checkin-schema');
+const moment = require('moment');
 
 module.exports = async function(req, res) {
-  const currentDate = moment().format("MM-DD-YYYY");
+  const currentDate = moment().format('M/D/YYYY');
   await checkin.aggregate(
     [
       { $match: { date: { $regex: currentDate.toString() } } },
       {
         $lookup: {
-          from: "users",
-          localField: "pin",
-          foreignField: "pin",
-          as: "user"
+          from: 'users',
+          localField: 'pin',
+          foreignField: 'pin',
+          as: 'user'
         }
       },
       {
