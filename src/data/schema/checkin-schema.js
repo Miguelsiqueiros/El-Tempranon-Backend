@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let checkinSchema = new Schema({
@@ -9,4 +9,4 @@ let checkinSchema = new Schema({
   week: Number
 });
 
-module.exports = mongoose.model('checkin', checkinSchema);
+module.exports = mongoose.model("checkin", checkinSchema, "checkin");
