@@ -9,4 +9,4 @@ let checkinSchema = new Schema({
   week: Number
 });
 
-module.exports = mongoose.model('checkin', checkinSchema);
+module.exports = mongoose.model("checkin", checkinSchema, "checkin");
