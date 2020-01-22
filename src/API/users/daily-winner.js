@@ -18,7 +18,6 @@ module.exports = async function(req, res) {
       {
         $project: {
           _id: 0,
-          pto: 0,
           date: 0,
           week: 0,
           pin: 0,
@@ -31,9 +30,17 @@ module.exports = async function(req, res) {
       },
       { $sort: { minutes: 1 } }
     ],
-    (error, document) => {
+    async (error, document) => {
       if (error) logger.warn(error.message);
-      res.status(200).json(document);
+      let users = [];
+      await document.forEach(item => {
+        users.push({
+          name: item.user[0].name,
+          minutes: item.minutes,
+          pto: item.pto
+        });
+      });
+      res.status(200).json(users);
     }
   );
 };
