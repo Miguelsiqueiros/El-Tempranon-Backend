@@ -24,7 +24,7 @@ module.exports = async function(req, res) {
           user: {
             _id: 0,
             pin: 0,
-            imageUrl: 0
+            image: 0
           }
         }
       },

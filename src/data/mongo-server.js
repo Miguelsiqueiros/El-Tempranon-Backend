@@ -1,7 +1,7 @@
-const mongoClient = require("mongoose");
-const url = process.env.MongoClient || "mongodb://localhost:27017/Tempranon";
+const mongoClient = require('mongoose');
+const url = process.env.MongoClient || 'mongodb://localhost:27017/TempranonDB';
 
-const logger = require("../log/logger");
+const logger = require('../log/logger');
 
 function Connect() {
   try {
@@ -11,7 +11,7 @@ function Connect() {
         useNewUrlParser: true,
         useUnifiedTopology: true
       },
-      () => logger.info("MongoDb successfuly connected")
+      () => logger.info('MongoDb successfuly connected')
     );
   } catch (err) {
     logger.warn(err.stack);
