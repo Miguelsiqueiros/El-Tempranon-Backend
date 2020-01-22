@@ -18,4 +18,4 @@ function Connect() {
   }
 }
 
-module.exports = Connect();
+module.exports = Connect;
