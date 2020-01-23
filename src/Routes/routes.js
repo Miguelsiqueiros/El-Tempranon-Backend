@@ -11,6 +11,8 @@ router.post('/users/create', createUser);
 
 router.get('/dashboard/lazyAndBest/:week', dashboard.getLazyAndBest);
 
+router.get("/dashboard/getweeklydata/:week", dashboard.getWeeklyData);
+
 router.post('/users/checkin', checkin);
 
 router.get('/users/daily-ladder', dailyWinner);
