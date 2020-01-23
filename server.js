@@ -12,7 +12,7 @@ const mongo = require('./src/data/mongo-server');
 const healthcheck = require('./src/API/healthcheck');
 
 function Server() {
-  const port = process.env.Port || 8080;
+  const port = process.env.PORT || 8080;
 
   mongo.call();
 
