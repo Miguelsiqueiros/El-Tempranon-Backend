@@ -16,6 +16,15 @@ exports.getLazyAndBest = (req, res, next) => {
    
 }
 
+exports.getWeeklyData = (req, res, next) => {
+    totalMinutesPerWeek(Number(req.params.week)).then(dataperWeek => {
+        res.status(200).json({
+            weeklyData: dataperWeek
+        });
+    });
+}
+
+
 async function totalMinutesPerWeek(numberOfWeek){
     let dataPerPin = [];
     await checkin.aggregate([
