@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "express-pino-logger": "^4.0.0",
     "logger": "0.0.1",
     "moment": "^2.24.0",
+    "mongoose": "^5.8.9",
     "pino": "^5.16.0"
   },
   "type": "module",
@@ -28,7 +29,6 @@
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.0.0",
     "mongodb-memory-server": "^6.2.1",
-    "mongoose": "^5.8.7",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }

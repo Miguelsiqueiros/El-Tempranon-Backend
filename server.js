@@ -7,8 +7,14 @@ const expressPino = require('express-pino-logger');
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 const expressLogger = expressPino({ logger });
 
+const mongo = require('./src/data/mongo-server');
+
+const healthcheck = require('./src/API/healthcheck');
+
 function Server() {
   const port = process.env.Port || 8080;
+
+  mongo.call();
 
   const app = express();
 
@@ -17,6 +23,8 @@ function Server() {
   app.use(expressLogger);
 
   app.use('/api/v1/', router);
+
+  app.get('/', healthcheck);
 
   return app.listen(port, () => logger.info(`Listening to port: ${port}`));
 }
