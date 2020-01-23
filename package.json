@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
-    "start": "nodemon server.js",
-    "heroku-postbuild": "node server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
