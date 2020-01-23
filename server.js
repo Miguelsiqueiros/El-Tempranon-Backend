@@ -9,6 +9,8 @@ const expressLogger = expressPino({ logger });
 
 const mongo = require('./src/data/mongo-server');
 
+const healthcheck = require('./src/API/healthcheck');
+
 function Server() {
   const port = process.env.Port || 8080;
 
@@ -21,6 +23,8 @@ function Server() {
   app.use(expressLogger);
 
   app.use('/api/v1/', router);
+
+  app.get('/', healthcheck);
 
   return app.listen(port, () => logger.info(`Listening to port: ${port}`));
 }
