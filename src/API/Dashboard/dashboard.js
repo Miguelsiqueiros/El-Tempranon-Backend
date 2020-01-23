@@ -13,12 +13,12 @@ exports.getLazyAndBest = (req, res, next) => {
             average: average
         });
     });
-   
+
 }
 
 async function totalMinutesPerWeek(numberOfWeek){
-    let dataPerPin = [];
-    await checkin.aggregate([
+    let dataPerPin= [];
+    let documents = await checkin.aggregate([
         {$match: {week: numberOfWeek}},
         {$group: {_id: "$pin", minutes: {$sum: "$minutes"}}},
         {$sort: {minutes: 1}},
@@ -43,13 +43,14 @@ async function totalMinutesPerWeek(numberOfWeek){
     ], 
         (error, documents) => {
             if(error) logger.warn(error.message);
-            documents.forEach( doc => {
-                dataPerPin.push({
-                    pin: doc._id,
-                    minutes: doc.minutes,
-                    name: doc.user[0].name
-                })
-            })
+        });
+
+        documents.forEach( doc => {
+            dataPerPin.push({
+                pin: doc._id,
+                minutes: doc.minutes,
+                name: doc.user[0].name
+            });
         });
     return dataPerPin;
 }
