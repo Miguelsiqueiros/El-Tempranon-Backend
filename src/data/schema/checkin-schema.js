@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let checkinSchema = new Schema({
@@ -10,3 +10,4 @@ let checkinSchema = new Schema({
 });
 
 module.exports = mongoose.model("checkin", checkinSchema, "checkin");
+
