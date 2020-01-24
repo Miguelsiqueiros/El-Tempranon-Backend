@@ -1,6 +1,7 @@
 const express = require('express');
 const router = require('./src/Routes/routes');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const pino = require('pino');
 const expressPino = require('express-pino-logger');
 
@@ -21,6 +22,12 @@ function Server() {
   app.use(bodyParser.json());
 
   app.use(expressLogger);
+
+  app.use(
+    cors({
+      origin: 'https://tempranon-angular.herokuapp.com'
+    })
+  );
 
   app.use('/api/v1/', router);
 
