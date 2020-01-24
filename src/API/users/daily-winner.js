@@ -36,7 +36,7 @@ module.exports = async function(req, res) {
       await document.forEach(item => {
         users.push({
           name: item.user[0].name,
-          minutes: item.minutes,
+          totalMinutes: item.minutes,
           pto: item.pto
         });
       });
