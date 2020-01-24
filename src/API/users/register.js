@@ -1,11 +1,11 @@
-const logger = require("../../log/logger");
-const users = require("../../data/schema/user-schema");
+const logger = require('../../log/logger');
+const users = require('../../data/schema/user-schema');
 
 module.exports = function(req, res) {
-  const { name, imageUrl } = req.body;
+  const { name, image } = req.body;
 
   SelectRandomNumber().then(newPin => {
-    const document = { pin: newPin, name: name, imageUrl: imageUrl };
+    const document = { pin: newPin, name: name, image: image };
     users.create(document, (error, doc) => {
       if (error) logger.warn(error.message);
       res.status(201).json(document);
