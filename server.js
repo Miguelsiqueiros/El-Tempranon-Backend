@@ -12,9 +12,9 @@ const mongo = require('./src/data/mongo-server');
 
 const healthcheck = require('./src/API/healthcheck');
 
-function Server() {
-  const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
+function Server() {
   mongo.call();
 
   const app = express();
@@ -33,9 +33,10 @@ function Server() {
 
   app.get('/', healthcheck);
 
-  return app.listen(port, () => logger.info(`Listening to port: ${port}`));
+  if (!module.parent) {
+    app.listen(port, () => logger.info(`Listening to port: ${port}`));
+  }
+  return app;
 }
-
-Server();
 
 module.exports = Server;

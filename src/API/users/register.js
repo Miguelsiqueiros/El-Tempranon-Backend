@@ -4,6 +4,8 @@ const users = require('../../data/schema/user-schema');
 module.exports = function(req, res) {
   const { name, image } = req.body;
 
+  if (!name) return res.status(400).send('Name is required');
+
   SelectRandomNumber().then(newPin => {
     const document = { pin: newPin, name: name, image: image };
     users.create(document, (error, doc) => {
