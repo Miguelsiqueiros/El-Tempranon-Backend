@@ -32,7 +32,7 @@ describe('Lazy and best endpoint', () => {
       .end((error, result) => {
         assert.equal(result.status, 200);
         const hasFieldBest = 'best' in result.body ? true : false;
-        const hasFieldlosers = 'loosers' in result.body ? true : false;
+        const hasFieldlosers = 'losers' in result.body ? true : false;
         const hasFieldAverage = 'average' in result.body ? true : false;
         assert(hasFieldBest);
         assert(hasFieldlosers);
@@ -54,5 +54,6 @@ describe('Lazy and best endpoint', () => {
     request(app.call())
       .get(`/api/v1/dashboard/lazyAndBest/${faker.random.alphaNumeric()}`)
       .expect(422, done);
+      
   });
 });
