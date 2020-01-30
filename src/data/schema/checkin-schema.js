@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let checkinSchema = new Schema({
-  pin: Number,
+  user_id: String,
   pto: Boolean,
   date: String,
   minutes: Number,
