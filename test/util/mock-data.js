@@ -1,30 +1,32 @@
 const momentjs = require('moment');
 const faker = require('faker');
-
-function generateMockData() {
-  const checkin = [];
+const userSchema = require('../../src/data/schema/user-schema');
+const checkinSchema = require('../../src/data/schema/checkin-schema');
+module.exports = async () => {
+  const currentDate = momentjs().format('M/D/YYYY');
   const users = [];
   const pin = 1000;
+
   for (i = 0; i < 10; i++) {
+    const name = faker.name.findName();
     users.push({
-      name: faker.name.findName(),
-      pin: pin + i
+      name: name,
+      pin: pin + i,
+      email: `${name.trim()}@mail.com`
     });
   }
-  const currentDate = momentjs().format('M/D/YYYY');
-  users.map(user => {
+
+  const createdUsers = await userSchema.create(users);
+  const checkin = [];
+  createdUsers.map(async user => {
     checkin.push({
-      pin: user.pin,
+      user_id: `${user._id}`,
       pto: false,
       minutes: Math.floor(Math.random() * 100),
       date: currentDate.toString(),
       week: momentjs(currentDate).isoWeek()
     });
   });
-  return {
-    users: users,
-    checkin: checkin
-  };
-}
 
-module.exports = generateMockData();
+  await checkinSchema.create(checkin);
+};

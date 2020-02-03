@@ -8,27 +8,21 @@ module.exports = async function(req, res) {
     [
       { $match: { date: { $regex: currentDate.toString() } } },
       {
+        $group: {
+          _id: { $toObjectId: '$user_id' },
+          minutes: { $first: '$minutes' },
+          pto: { $first: '$pto' }
+        }
+      },
+      { $sort: { minutes: 1 } },
+      {
         $lookup: {
           from: 'users',
-          localField: 'pin',
-          foreignField: 'pin',
+          localField: '_id',
+          foreignField: '_id',
           as: 'user'
         }
-      },
-      {
-        $project: {
-          _id: 0,
-          date: 0,
-          week: 0,
-          pin: 0,
-          user: {
-            _id: 0,
-            pin: 0,
-            image: 0
-          }
-        }
-      },
-      { $sort: { minutes: 1 } }
+      }
     ],
     async (error, document) => {
       if (error) logger.warn(error.message);

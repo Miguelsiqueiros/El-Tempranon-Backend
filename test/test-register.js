@@ -12,15 +12,20 @@ const mongoClientStub = {};
 const mongodbMock = proxyRequire('../server', {
   './src/data/mongo-server': mongoClientStub
 });
+const faker = require('faker');
 
 describe('Test register endpoint', () => {
-  before(
-    async () => (mongoClientStub.call = await mongodbMemoryServer.Connect())
-  );
-  it('/POST should create a user when a name is provided', done => {
+  before(async () => {
+    mongoClientStub.call = await mongodbMemoryServer.Connect();
+    mongodbMemoryServer.clearDatabase();
+  });
+  it('/POST should create a user when a name and email is provided', done => {
     request(app.call())
       .post('/api/v1/users/create')
-      .send({ name: 'dummyUser' })
+      .send({
+        name: faker.name.findName(),
+        email: `${faker.name.firstName().trim()}@email.com`
+      })
       .set('Accept', 'application/json')
       .end((err, result) => {
         const pin = result.body.pin;
@@ -34,7 +39,8 @@ describe('Test register endpoint', () => {
   it('/POST should return bad request when name is not provided', done => {
     request(app.call())
       .post('/api/v1/users/create')
+      .send({ email: `${faker.name.firstName().trim()}@email.com` })
       .set('Accept', 'application/json')
-      .expect(400, done);
+      .expect(422, done);
   });
 });
