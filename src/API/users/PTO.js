@@ -61,7 +61,7 @@ module.exports = function(req, res) {
                         info: `PTO successfully created, your penalization time is ${
                           average >= 0 ? average : 0
                         } minutes`,
-                        type: "success"
+                        type: "info"
                       };
                       res.status(201).send(JSON.stringify(resp));
                     } else {
