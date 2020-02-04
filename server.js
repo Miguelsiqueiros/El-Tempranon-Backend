@@ -21,7 +21,11 @@ function Server() {
 
   app.use(
     cors({
-      origin: 'https://tempranon-angular.herokuapp.com'
+      origin: [
+        'https://tempranon-angular.herokuapp.com',
+        'https://tempranon-angular-test.herokuapp.com/',
+        'http://localhost:4200'
+      ]
     })
   );
 
