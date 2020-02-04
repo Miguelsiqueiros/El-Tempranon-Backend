@@ -1,24 +1,28 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const createUser = require('../API/users/register');
-const checkin = require('../API/users/checkin');
-const dailyWinner = require('../API/users/daily-winner');
-const dashboard = require('../API/Dashboard/dashboard');
-const weeklyLadder = require('../API/users/weekly-ranking');
+const createUser = require("../API/users/register");
+const checkin = require("../API/users/checkin");
+const dailyWinner = require("../API/users/daily-winner");
+const dashboard = require("../API/Dashboard/dashboard");
+const weeklyLadder = require("../API/users/weekly-ranking");
+const PTO = require("../API/users/PTO");
 
-const registerValidators = require('../API/validators/register-validator');
+const registerValidators = require("../API/validators/register-validator");
+const ptoValidators = require("../API/validators/pto-validator");
 
-router.post('/users/create', registerValidators, createUser);
+router.post("/users/create", registerValidators, createUser);
 
-router.get('/dashboard/lazyAndBest/:week', dashboard.getLazyAndBest);
+router.get("/dashboard/lazyAndBest/:week", dashboard.getLazyAndBest);
 
-router.get('/dashboard/getweeklydata/:week', dashboard.getWeeklyData);
+router.get("/dashboard/getweeklydata/:week", dashboard.getWeeklyData);
 
-router.post('/users/checkin', checkin);
+router.post("/users/checkin", checkin);
 
-router.get('/users/daily-ladder', dailyWinner);
+router.get("/users/daily-ladder", dailyWinner);
 
-router.get('/users/weekly-ladder', weeklyLadder);
+router.get("/users/weekly-ladder", weeklyLadder);
+
+router.post("/users/pto", ptoValidators, PTO);
 
 module.exports = router;
