@@ -1,13 +1,13 @@
-const logger = require("../../log/logger");
-const checkin = require("../../data/schema/checkin-schema");
-const users = require("../../data/schema/user-schema");
-const moment = require("moment");
-const { validationResult } = require("express-validator");
+const logger = require('../../log/logger');
+const checkin = require('../../data/schema/checkin-schema');
+const users = require('../../data/schema/user-schema');
+const moment = require('moment');
+const { validationResult } = require('express-validator');
 
 module.exports = function(req, res) {
-  const errores = validationResult(req);
-  if (!errores.isEmpty())
-    return res.status(422).json({ errores: errores.array() });
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(422).json({ errors: errors.array() });
   const pin = req.body.pin;
   const date = new Date();
   users.findOne({ pin: pin }, (err, item) => {
@@ -22,7 +22,7 @@ module.exports = function(req, res) {
         (err, item) => {
           if (!item) {
             try {
-              const weekNumber = moment(moment().format("M/D/YYYY")).isoWeek();
+              const weekNumber = moment(moment().format('M/D/YYYY')).isoWeek();
               const minutesToday =
                 (date.getHours() - 8) * 60 + date.getMinutes();
               const currentDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
@@ -39,13 +39,13 @@ module.exports = function(req, res) {
                 if (item) {
                   let resp = {
                     info: `Welcome ${name}, you successfully checked in at ${currentDate}.`,
-                    type: "success"
+                    type: 'success'
                   };
                   res.status(201).send(JSON.stringify(resp));
                 } else {
                   let resp = {
                     info: `Failed to create Checkin.`,
-                    type: "error"
+                    type: 'error'
                   };
                   res.status(200).send(JSON.stringify(resp));
                 }
@@ -56,7 +56,7 @@ module.exports = function(req, res) {
           } else {
             let resp = {
               info: `${name}, you already checked in`,
-              type: "warning"
+              type: 'warning'
             };
             res.status(200).send(JSON.stringify(resp));
           }
@@ -65,7 +65,7 @@ module.exports = function(req, res) {
     } else {
       let resp = {
         info: `The PIN ${pin} you entered doesn't exist`,
-        type: "error"
+        type: 'error'
       };
       res.status(200).send(JSON.stringify(resp));
     }
