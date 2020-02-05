@@ -50,10 +50,4 @@ describe('Lazy and best endpoint', () => {
       .get('/api/v1/dashboard/lazyAndBest/-1')
       .expect(422, done);
   });
-  it('/GET should return a 422 status code if the week is alphanumeric', done => {
-    request(app.call())
-      .get(`/api/v1/dashboard/lazyAndBest/${faker.random.alphaNumeric()}`)
-      .expect(422, done);
-      
-  });
 });

@@ -11,12 +11,13 @@ const PTO = require("../API/users/PTO");
 const registerValidators = require("../API/validators/register-validator");
 const ptoValidators = require("../API/validators/pto-validator");
 const checkinValidators = require("../API/validators/checkin-validator");
+const dashboardWeekValidators = require("../API/validators/dashboardWeek-validator");
 
 router.post("/users/create", registerValidators, createUser);
 
-router.get("/dashboard/lazyAndBest/:week", dashboard.getLazyAndBest);
+router.get("/dashboard/lazyAndBest/:week", dashboardWeekValidators, dashboard.getLazyAndBest);
 
-router.get("/dashboard/getweeklydata/:week", dashboard.getWeeklyData);
+router.get("/dashboard/getweeklydata/:week", dashboardWeekValidators, dashboard.getWeeklyData);
 
 router.post("/users/checkin", checkinValidators, checkin);
 
