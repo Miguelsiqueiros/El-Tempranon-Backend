@@ -1,68 +1,58 @@
 const logger = require('../../log/logger');
 const users = require('../../data/schema/user-schema');
 const checkin = require('../../data/schema/checkin-schema');
+const { validationResult } = require('express-validator');
 
 exports.getLazyAndBest = (req, res, next) => {
-  let week = Number(req.params.week);
-  totalMinutesPerWeek(week).then(async dataperWeek => {
-    if (week > 0 && week.toString().match('[0-9]+') && week < 53) {
-      let average = 0;
-      let losers = [];
-      let winners = [];
-      dataperWeek.forEach(data => (average = average + data.minutes));
-      average = average / dataperWeek.length;
-      try {
-        await calculateLosers(dataperWeek).then(result => {
-          if (result !== undefined) losers = result;
-          else
-            logger.warn(
-              'dashboard/lazyAndBest : there less than 3 users with checkin this week.'
-            );
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-
-      try {
-        await calculateWinners(dataperWeek).then(result => {
-          if (result !== undefined) winners = result;
-          else
-            logger.warn(
-              'dashboard/lazyAndBest : any users available this week.'
-            );
-        });
-      } catch (error) {
-        logger.error(error);
-      }
-
-      res.status(200).json({
-        best: winners,
-        losers: losers,
-        average: average
-      });
-    } else {
-      res.status(422).json({
-        error:
-          'Parameter should not be: zero, negative, alphanumeric or higher than 52.'
-      });
-    }
-  });
-};
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()) return res.status(422).send({ errors: validationErrors.array()});
+    let week = Number(req.params.week);
+    totalMinutesPerWeek(week).then(async (dataperWeek) => {
+            let average = 0;
+            let losers = [];
+            let winners = [];
+            dataperWeek.forEach(data => average = average + data.minutes);
+            average = average / dataperWeek.length;
+            try{
+                await calculateLosers(dataperWeek).then(result => {
+                    if(result !== undefined)
+                        losers = result;
+                    else
+                        logger.warn("dashboard/lazyAndBest : there less than 3 users with checkin this week.");
+                });
+            }
+            catch(error){
+                logger.error(error);
+            }
+            try{
+                await calculateWinners(dataperWeek).then(result => {
+                    if(result !== undefined)
+                        winners = result;
+                    else
+                        logger.warn("dashboard/lazyAndBest : any users available this week.");
+                });
+            }
+            catch(error){
+                logger.error(error);
+            }
+        
+            res.status(200).json({
+                best: winners,
+                losers: losers,
+                average: average
+            });
+    });
+}
 
 exports.getWeeklyData = (req, res, next) => {
-  let week = Number(req.params.week);
-  if (week > 0 && week.toString().match('[0-9]+') && week < 53) {
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()) return res.status(422).send({ errors: validationErrors.array()});
+    let week = Number(req.params.week);
     totalMinutesPerWeek(week).then(dataperWeek => {
-      res.status(200).json({
-        weeklyData: dataperWeek
-      });
+        res.status(200).json({
+            weeklyData: dataperWeek
+        });
     });
-  } else {
-    res.status(422).json({
-      error:
-        'Parameter should not be: zero, negative, alphanumeric or higher than 52.'
-    });
-  }
 };
 
 async function totalMinutesPerWeek(numberOfWeek) {
@@ -101,13 +91,14 @@ async function totalMinutesPerWeek(numberOfWeek) {
     }
   );
   documents.forEach(doc => {
-    if (doc.user[0] === null) {
-      logger.warn('checkin/getweeklydata: Not existing user');
+     
+    if (doc.user.length < 1) {
+        logger.warn('checkin/getweeklydata: Not existing user');
     } else {
       dataPerPin.push({
-        email: doc.user[0].email,
-        minutes: doc.minutes,
-        name: doc.user[0].name
+        email: (doc.user[0].email == undefined) ? "none" : doc.user[0].email ,
+        minutes: (doc.minutes == undefined) ? 0 : doc.minutes,
+        name: (doc.user[0].name == undefined) ? "none" : doc.user[0].name
       });
     }
   });

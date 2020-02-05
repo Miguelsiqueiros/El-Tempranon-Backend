@@ -5,11 +5,7 @@ const app = require("../server");
 
 const mongodbMemoryServer = require("./util/mongodb-in-memory");
 const mockData = require("./util/mock-data");
-const mongoClientStub = {};
-const proxyRequire = require("proxyquire");
-const mongodbMock = proxyRequire("../server", {
-  "./src/data/mongo-server": mongoClientStub
-});
+
 
 const checkinSchema = require("../src/data/schema/checkin-schema");
 const usersSchema = require("../src/data//schema/user-schema");
@@ -21,22 +17,21 @@ const faker = require("faker");
 describe("Get weekly data endpoint", () => {
   const currentDate = momentjs().format("M/D/YYYY");
   before(async () => {
-    mongoClientStub.call = await mongodbMemoryServer.Connect();
+    await mongodbMemoryServer.Connect();
     await mongodbMemoryServer.clearDatabase.call();
-    await usersSchema.insertMany(mockData.users);
-    await checkinSchema.insertMany(mockData.checkin);
+    await mockData.call();
   });
-  it("/GET should return an array of objects with a pin, name and minutes of any week", done => {
+  it("/GET should return an array of objects with a email, name and minutes of any week", done => {
     request(app.call())
       .get(`/api/v1/dashboard/getweeklydata/${momentjs(currentDate).isoWeek()}`)
       .end((error, result) => {
         assert.equal(result.status, 200);
-        assert(result.body.weeklyData.length, mockData.users.length);
-        const hasFieldPin = "pin" in result.body.weeklyData[0] ? true : false;
-        const hasFieldName = "name" in result.body.weeklyData[0] ? true : false;
+        assert(result.body.weeklyData.length > 0); 
+        const hasFieldEmail = 'email' in result.body.weeklyData[0] ? true : false;
+        const hasFieldName = 'name' in result.body.weeklyData[0] ? true : false;
         const hasFieldMinutes =
           "minutes" in result.body.weeklyData[0] ? true : false;
-        assert(hasFieldPin);
+        assert(hasFieldEmail);
         assert(hasFieldName);
         assert(hasFieldMinutes);
         done();
