@@ -63,7 +63,82 @@ exports.getWeeksAverage = (req, res, next) => {
   getLastWeeksData(weeks).then(averages => {
     (averages !== undefined) ? res.status(200).json({WeeklyAverage: averages}) : res.status(500).send("Internal Server Error");
   });
+}
+exports.getOneWeekArrival = (req, res, next) => {
+    const validationErrors = validationResult(req);
+    if(!validationErrors.isEmpty()) return res.status(422).send({ errors: validationErrors.array()});
+    timeArrivalPerDay(Number(req.params.week)).then(dataArrival => {
+        res.status(200).json({
+            dailyData: dataArrival
+        });
+    });
+}
 
+async function timeArrivalPerDay(numberOfWeek) {
+
+    let dataArrival = [];
+    try {
+        
+        let documents = await checkin.aggregate([
+            {$match: {week: numberOfWeek}},
+            {
+                "$addFields": {
+                    "userObj_id": {
+                      "$toObjectId": "$user_id"
+                    }
+                  }  
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userObj_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    minutes: 0,
+                    pto: 0, 
+                    userObj_id: 0,
+                    user_id: 0,
+                 user: {
+                     _id: 0,
+                     pin:0,
+                     image: 0,
+                     achievements: 0
+                   }
+                }
+            }
+         ],
+             (error, documents) => {
+             if(error) {
+                 logger.warn(error.message);
+                }
+         });
+       
+         let data = [];
+         documents.forEach(doc => { 
+            let date = moment(doc.date);
+            if(doc.user.length < 1)
+                logger.warn("checkin/getweeklydata: Not existing user");
+            else {
+                data.push({
+                    week: (doc.week === undefined) ? 0 : doc.week,
+                    day: (date.day() === undefined) ? 0 : date.day(),
+                    hour: date.format('HH:mm'),
+                    name: (doc.user[0].name === undefined) ? "none" : doc.user[0].name,
+                    email: (doc.user[0].email === undefined) ? "none" : doc.user[0].email,
+                    date: (doc.date === undefined) ? "none" : doc.date
+                });
+            } 
+         });
+         let dataPerDay = groupBy(data, "day");
+         return dataPerDay;
+    }catch(error){
+        logger.error(error);
+    }
 }
 
 async function totalMinutesPerWeek(numberOfWeek) {
@@ -171,3 +246,19 @@ async function getLastWeeksData(numberOfWeeks){
     }
     return averages;
 }
+
+function groupBy(collection, property){
+    let val, index, values = [], result = [];
+    for (let i = 0; i < collection.length; i++) {
+        val = collection[i][property];
+        index = values.indexOf(val);
+        if (index > -1)
+            result[index].push(collection[i]);
+        else {
+            values.push(val);
+            result.push([collection[i]]);
+        }
+    }
+    return result;
+}
+
