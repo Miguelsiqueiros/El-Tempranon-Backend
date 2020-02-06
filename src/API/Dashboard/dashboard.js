@@ -2,6 +2,7 @@ const logger = require('../../log/logger');
 const users = require('../../data/schema/user-schema');
 const checkin = require('../../data/schema/checkin-schema');
 const { validationResult } = require('express-validator');
+const moment = require('moment');
 
 exports.getLazyAndBest = (req, res, next) => {
     const validationErrors = validationResult(req);
@@ -54,6 +55,16 @@ exports.getWeeklyData = (req, res, next) => {
         });
     });
 };
+
+exports.getWeeksAverage = (req, res, next) => {
+  const validationErrors = validationResult(req);
+  if(!validationErrors.isEmpty()) return res.status(422).send({ errors: validationErrors.array()});
+  let weeks = Number(req.params.weeks);
+  getLastWeeksData(weeks).then(averages => {
+    (averages !== undefined) ? res.status(200).json({WeeklyAverage: averages}) : res.status(500).send("Internal Server Error");
+  });
+
+}
 
 async function totalMinutesPerWeek(numberOfWeek) {
   let dataPerPin = [];
@@ -142,4 +153,21 @@ async function calculateWinners(data) {
   } else {
     return undefined;
   }
+}
+
+async function getLastWeeksData(numberOfWeeks){
+    const weekNumber = moment(moment().format('M/D/YYYY')).isoWeek();
+    let averages = [];
+    if((weekNumber - numberOfWeeks) < 0) numberOfWeeks = weekNumber;
+    for(let i = (weekNumber-numberOfWeeks);i<weekNumber; i++ ){
+        let average = 0;
+        let dataperWeek = await totalMinutesPerWeek(i+1);
+        dataperWeek.forEach(data => average = average + data.minutes);
+        average = average / dataperWeek.length;
+        averages.push({
+            numberOfWeek: i+1,
+            average: average
+        });
+    }
+    return averages;
 }

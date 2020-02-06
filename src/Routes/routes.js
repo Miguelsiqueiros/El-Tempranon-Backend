@@ -12,12 +12,15 @@ const registerValidators = require("../API/validators/register-validator");
 const ptoValidators = require("../API/validators/pto-validator");
 const checkinValidators = require("../API/validators/checkin-validator");
 const dashboardWeekValidators = require("../API/validators/dashboardWeek-validator");
+const dashboardWeeksValidators = require("../API/validators/dashboardWeeks-validator");
 
 router.post("/users/create", registerValidators, createUser);
 
 router.get("/dashboard/lazyAndBest/:week", dashboardWeekValidators, dashboard.getLazyAndBest);
 
 router.get("/dashboard/getweeklydata/:week", dashboardWeekValidators, dashboard.getWeeklyData);
+
+router.get("/dashboard/weeksAverage/:weeks", dashboardWeeksValidators, dashboard.getWeeksAverage);
 
 router.post("/users/checkin", checkinValidators, checkin);
 
