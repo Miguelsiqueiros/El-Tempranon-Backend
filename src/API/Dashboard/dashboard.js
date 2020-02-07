@@ -78,46 +78,57 @@ async function timeArrivalPerDay(numberOfWeek) {
 
     let dataArrival = [];
     try {
-        
-        let documents = await checkin.aggregate([
-            {$match: {week: numberOfWeek}},
-            {
-                "$addFields": {
-                    "userObj_id": {
-                      "$toObjectId": "$user_id"
-                    }
-                  }  
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'userObj_id',
-                    foreignField: '_id',
-                    as: 'user'
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    minutes: 0,
-                    pto: 0, 
-                    userObj_id: 0,
-                    user_id: 0,
-                 user: {
-                     _id: 0,
-                     pin:0,
-                     image: 0,
-                     achievements: 0
-                   }
-                }
+      let documents = await checkin.aggregate([
+        {$match: {week: numberOfWeek}},
+        {
+          $group : { _id : 
+            { $dayOfWeek: 
+              { $dateFromString: 
+                {
+                  dateString: "$date"
+                } 
+              }
+            }, 
+            checkin: { $push: "$$ROOT" },
+
+          }
+        },
+        { $unwind: { path: "$checkin" } },
+        {
+          "$addFields": {
+              "userObj_id": {
+                "$toObjectId": "$checkin.user_id"
+              }
+            }  
+      },
+      {
+          $lookup: {
+              from: 'users',
+              localField: 'userObj_id',
+              foreignField: '_id',
+              as: 'user'
+          }
+      },
+      {
+          $project: {
+            userObj_id: 0,
+              minutes: 0,
+              pto: 0, 
+              user_id: 0,
+           user: {
+               _id: 0,
+               pin:0,
+               image: 0,
+               achievements: 0
+             }
+          }
+      }
+     ],
+         (error, documents) => {
+         if(error) {
+             logger.warn(error.message);
             }
-         ],
-             (error, documents) => {
-             if(error) {
-                 logger.warn(error.message);
-                }
-         });
-       
+     });
          let data = [];
          documents.forEach(doc => { 
             let date = moment(doc.date);
@@ -125,17 +136,16 @@ async function timeArrivalPerDay(numberOfWeek) {
                 logger.warn("checkin/getweeklydata: Not existing user");
             else {
                 data.push({
-                    week: (doc.week === undefined) ? 0 : doc.week,
-                    day: (date.day() === undefined) ? 0 : date.day(),
+                    week: (doc.checkin.week === undefined) ? 0 : doc.checkin.week,
+                    day: (doc._id === undefined) ? 0 : doc._id,
                     hour: date.format('HH:mm'),
                     name: (doc.user[0].name === undefined) ? "none" : doc.user[0].name,
                     email: (doc.user[0].email === undefined) ? "none" : doc.user[0].email,
-                    date: (doc.date === undefined) ? "none" : doc.date
+                    date: (doc.checkin.date === undefined) ? "none" : doc.checkin.date
                 });
             } 
          });
-         let dataPerDay = groupBy(data, "day");
-         return dataPerDay;
+         return data;
     }catch(error){
         logger.error(error);
     }
@@ -245,20 +255,5 @@ async function getLastWeeksData(numberOfWeeks){
         });
     }
     return averages;
-}
-
-function groupBy(collection, property){
-    let val, index, values = [], result = [];
-    for (let i = 0; i < collection.length; i++) {
-        val = collection[i][property];
-        index = values.indexOf(val);
-        if (index > -1)
-            result[index].push(collection[i]);
-        else {
-            values.push(val);
-            result.push([collection[i]]);
-        }
-    }
-    return result;
 }
 
