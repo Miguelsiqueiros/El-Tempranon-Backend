@@ -22,6 +22,8 @@ router.get("/dashboard/getweeklydata/:week", dashboardWeekValidators, dashboard.
 
 router.get("/dashboard/weeksAverage/:weeks", dashboardWeeksValidators, dashboard.getWeeksAverage);
 
+router.get("/dashboard/oneweekarrival/:week", dashboardWeekValidators, dashboard.getOneWeekArrival);
+
 router.post("/users/checkin", checkinValidators, checkin);
 
 router.get("/users/daily-ladder", dailyWinner);
