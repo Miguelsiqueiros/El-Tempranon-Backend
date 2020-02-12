@@ -1,14 +1,17 @@
-const { check } = require('express-validator');
+const { check } = require("express-validator");
 
 module.exports = [
-  check('name')
+  check("name")
     .isString()
-    .withMessage('Name should only have letters')
+    .withMessage("Name should only have letters")
     .notEmpty()
-    .withMessage('Field name is required'),
-  check('email')
+    .withMessage("Field name is required"),
+  check("email")
     .isEmail()
-    .withMessage('Email format is incorrect')
+    .withMessage("Email format is incorrect")
     .notEmpty()
-    .withMessage('Field email is required')
+    .withMessage("Field email is required"),
+  check("arrival")
+    .notEmpty()
+    .withMessage("Field arrival is required")
 ];
