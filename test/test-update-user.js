@@ -6,12 +6,10 @@ const userSchema = require("../src/data/schema/user-schema");
 
 const faker = require("faker");
 
-const mongoClientStub = {};
-
 describe("Test update user information endpoint", () => {
   let user;
   before(async () => {
-    mongoClientStub.call = await mongodbMemoryServer.Connect();
+    await mongodbMemoryServer.Connect();
     await mongodbMemoryServer.clearDatabase();
     const userName = faker.name.findName();
     user = new userSchema({
