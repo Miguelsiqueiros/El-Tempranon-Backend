@@ -17,7 +17,8 @@ describe("Test register endpoint", () => {
       .post("/api/v1/users/create")
       .send({
         name: faker.name.findName(),
-        email: `${faker.name.firstName().trim()}@email.com`
+        email: `${faker.name.firstName().trim()}@email.com`,
+        arrival: faker.random.number({ min: 6, max: 9 })
       })
       .set("Accept", "application/json")
       .end((err, result) => {
@@ -32,14 +33,30 @@ describe("Test register endpoint", () => {
   it("/POST should return bad request when name is not provided", done => {
     request(app.call())
       .post("/api/v1/users/create")
-      .send({ email: `${faker.name.firstName().trim()}@email.com` })
+      .send({
+        email: `${faker.name.firstName().trim()}@email.com`,
+        arrival: faker.random.number({ min: 6, max: 9 })
+      })
       .set("Accept", "application/json")
       .expect(422, done);
   });
   it("/POST should return bad request when email is not provided", done => {
     request(app.call())
       .post("/api/v1/users/create")
-      .send({ name: `${faker.name.findName()}` })
+      .send({
+        name: `${faker.name.findName()}`,
+        arrival: faker.random.number({ min: 6, max: 9 })
+      })
+      .set("Accept", "application/json")
+      .expect(422, done);
+  });
+  it("/POST shoul return bad request when arrival is not provided", done => {
+    request(app.call())
+      .post("/api/v1/users/create")
+      .send({
+        name: `${faker.name.findName()}`,
+        email: `${faker.name.firstName().trim()}@email.com`
+      })
       .set("Accept", "application/json")
       .expect(422, done);
   });
