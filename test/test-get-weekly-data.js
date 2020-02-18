@@ -49,7 +49,7 @@ describe("Get weekly data endpoint", () => {
   });
   it("/GET should return a 422 status code if the week is alphanumeric", done => {
     request(app.call())
-      .get(`/api/v1/dashboard/getweeklydata/${faker.random.alphaNumeric()}`)
+      .get(`/api/v1/dashboard/getweeklydata/hi12345`)
       .expect(422, done);
   });
 });
