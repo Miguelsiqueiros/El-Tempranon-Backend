@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit --timeout 10000",
-    "start": "node --experimental-modules index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
