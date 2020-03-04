@@ -22,7 +22,11 @@ module.exports = async function(req, res) {
 
     users.create(user, (error, doc) => {
       if (error) logger.warn(error.message);
-      res.status(201).json(user);
+      let resp = {
+        info: `Registration successful, your PIN is: ${user.pin}.`,
+        type: "success"
+      };
+      res.status(201).json(resp);
     });
   });
 };
