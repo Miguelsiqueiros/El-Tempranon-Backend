@@ -24,7 +24,7 @@ module.exports = async function(req, res) {
       if (error) logger.warn(error.message);
       let resp = {
         info: `Registration successful, your PIN is: ${user.pin}.`,
-        type: "success"
+        type: "info"
       };
       res.status(201).json(resp);
     });
