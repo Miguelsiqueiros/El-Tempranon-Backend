@@ -22,7 +22,7 @@ module.exports = function(req, res) {
       if (err) {
         logger.warn(err);
       }
-      if (item) {
+      if (item.nModified > 0) {
         let resp = {
           info: `User information updated succesful.`,
           type: "success"
