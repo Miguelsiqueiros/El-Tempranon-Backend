@@ -10,7 +10,12 @@ exports.getUser = async (req, res, next) => {
     return res.status(422).send({ errors: validationErrors.array() });
   try {
     await getUserData(req.params.pin).then(profileData => {
-      if (profileData !== null) {
+      if (profileData.name === "") {
+        res.status(400).json({
+          info: `The PIN ${req.params.pin} you entered doesn't exist`,
+          type: "error"
+        });
+      } else if (profileData !== null) {
         res.status(200).send(profileData);
       } else {
         res.status(400).json({
